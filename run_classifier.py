@@ -429,17 +429,14 @@ def convert_single_example(ex_index, example, label_list, ids, label_mask, max_s
   # the entire model is fine-tuned.
   tokens = []
   segment_ids = []
-  segment_ids.append(0)
   for token in tokens_a:
     tokens.append(token)
     segment_ids.append(0)
-  segment_ids.append(0)
 
   if tokens_b:
     for token in tokens_b:
       tokens.append(token)
       segment_ids.append(1)
-    segment_ids.append(1)
 
   input_ids = tokenizer.convert_tokens_to_ids(tokens)
 
