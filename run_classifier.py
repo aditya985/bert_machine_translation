@@ -718,7 +718,7 @@ def input_fn_builder(features, seq_length, is_training, drop_remainder):
   all_input_mask = []
   all_segment_ids = []
   all_label_ids = []
-
+  all_out_masks = []
   for feature in features:
     all_input_ids.append(feature.input_ids)
     all_input_mask.append(feature.input_mask)
