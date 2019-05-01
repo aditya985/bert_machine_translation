@@ -570,7 +570,7 @@ def _truncate_seq_pair(tokens_a, tokens_b, max_length):
     if total_length <= max_length:
       break
     if len(tokens_a) > len(tokens_b):
-      tokens_a.pop()convert_examples_to_features
+      tokens_a.pop()
     else:
       tokens_b.pop()
 
