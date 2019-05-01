@@ -166,11 +166,13 @@ class InputFeatures(object):
                input_mask,
                segment_ids,
                label_id,
+               out_mask,
                is_real_example=True):
     self.input_ids = input_ids
     self.input_mask = input_mask
     self.segment_ids = segment_ids
     self.label_id = label_id
+    self.out_mask = out_mask
     self.is_real_example = is_real_example
 
 
@@ -374,7 +376,7 @@ class ColaProcessor(DataProcessor):
     return examples
 
 
-def convert_single_example(ex_index, example, label_list, ids,max_seq_length,
+def convert_single_example(ex_index, example, label_list, ids, label_mask, max_seq_length,
                            tokenizer):
   """Converts a single `InputExample` into a single `InputFeatures`."""
 
@@ -387,8 +389,10 @@ def convert_single_example(ex_index, example, label_list, ids,max_seq_length,
         is_real_example=False)
 
   label_map = {}
-  for label,Id in zip(label_list,ids):
+  mask_map = {}
+  for label,Id,mask in zip(label_list,ids,label_mask):
     label_map[label] = Id
+    mask_map[label] = mask
 
   tokens_a = tokenizer.tokenize(example.text_a)
   tokens_b = None
@@ -454,6 +458,7 @@ def convert_single_example(ex_index, example, label_list, ids,max_seq_length,
   assert len(segment_ids) == max_seq_length
 
   label_id = label_map[example.label]
+  mask_id = mask_map[example.label]
   if ex_index < 5:
     tf.logging.info("*** Example ***")
     tf.logging.info("guid: %s" % (example.guid))
@@ -463,12 +468,13 @@ def convert_single_example(ex_index, example, label_list, ids,max_seq_length,
     tf.logging.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
     tf.logging.info("segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
     tf.logging.info("label: {} (id = {})".format(example.label, ','.join(list(map(str,label_id)))))
-
+    tf.logging.info("output_mask: {} ".format( ','.join(list(map(str,mask_id)))))
   feature = InputFeatures(
       input_ids=input_ids,
       input_mask=input_mask,
       segment_ids=segment_ids,
       label_id=label_id,
+      out_mask = mask_id,
       is_real_example=True)
   return feature
 
@@ -495,6 +501,7 @@ def file_based_convert_examples_to_features(
     features["input_mask"] = create_int_feature(feature.input_mask)
     features["segment_ids"] = create_int_feature(feature.segment_ids)
     features["label_ids"] = create_int_feature([feature.label_id])
+    
     features["is_real_example"] = create_int_feature(
         [int(feature.is_real_example)])
 
