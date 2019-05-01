@@ -777,7 +777,7 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
     if ex_index % 10000 == 0:
       tf.logging.info("Writing example %d of %d" % (ex_index, len(examples)))
 
-    feature = convert_single_example(ex_index, example, label_list,ids,masks
+    feature = convert_single_example(ex_index, example, label_list,ids,masks,
                                      max_seq_length, tokenizer)
 
     features.append(feature)
