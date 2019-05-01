@@ -570,7 +570,7 @@ def _truncate_seq_pair(tokens_a, tokens_b, max_length):
     if total_length <= max_length:
       break
     if len(tokens_a) > len(tokens_b):
-      tokens_a.pop()
+      tokens_a.pop()convert_examples_to_features
     else:
       tokens_b.pop()
 
@@ -595,7 +595,7 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
 
   hidden_size = output_layer.shape[-1].value
 
-  output_weights = tf.get_variable(
+  output_weights = tf.get_variconvert_examples_to_featuresable(
       "output_weights", [num_labels, hidden_size],
       initializer=tf.truncated_normal_initializer(stddev=0.02))
 
@@ -623,7 +623,7 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
 def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
                      num_train_steps, num_warmup_steps, use_tpu,
                      use_one_hot_embeddings):
-  """Returns `model_fn` closure for TPUEstimator."""
+  """Returns `model_fn` closurconvert_examples_to_featurese for TPUEstimator."""
 
   def model_fn(features, labels, mode, params):  # pylint: disable=unused-argument
     """The `model_fn` for TPUEstimator."""
@@ -769,7 +769,7 @@ def input_fn_builder(features, seq_length, is_training, drop_remainder):
 # This function is not used by this file but is still used by the Colab and
 # people who depend on it.
 def convert_examples_to_features(examples, label_list, max_seq_length,
-                                 tokenizer, ids):
+                                 tokenizer, ids, masks):
   """Convert a set of `InputExample`s to a list of `InputFeatures`."""
 
   features = []
@@ -777,7 +777,7 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
     if ex_index % 10000 == 0:
       tf.logging.info("Writing example %d of %d" % (ex_index, len(examples)))
 
-    feature = convert_single_example(ex_index, example, label_list,ids,
+    feature = convert_single_example(ex_index, example, label_list,ids,masks
                                      max_seq_length, tokenizer)
 
     features.append(feature)
