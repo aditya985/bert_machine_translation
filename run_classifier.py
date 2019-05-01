@@ -655,7 +655,7 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
 
         def tpu_scaffold():
           tf.train.init_from_checkpoint(init_checkpoint, assignment_map)
-          return tf.train.Scaffold()
+          return tf.train.Scaffold()file_based_convert_examples_to_features
 
         scaffold_fn = tpu_scaffold
       else:
@@ -724,7 +724,7 @@ def input_fn_builder(features, seq_length, is_training, drop_remainder):
     all_input_mask.append(feature.input_mask)
     all_segment_ids.append(feature.segment_ids)
     all_label_ids.append(feature.label_id)
-
+    all_out_masks.append(feature.out_mask)
   def input_fn(params):
     """The actual input function."""
     batch_size = params["batch_size"]
@@ -751,6 +751,8 @@ def input_fn_builder(features, seq_length, is_training, drop_remainder):
                 dtype=tf.int32),
         "label_ids":
             tf.constant(all_label_ids, shape=[num_examples,max_seq_len], dtype=tf.int32),
+        "out_masks":
+            tf.constant(all_masks, shape=[num_examples,max_seq_len], dtype=tf.int32)
     })
 
     if is_training:
@@ -910,7 +912,7 @@ def main(_):
       assert len(eval_examples) % FLAGS.eval_batch_size == 0
       eval_steps = int(len(eval_examples) // FLAGS.eval_batch_size)
 
-    eval_drop_remainder = True if FLAGS.use_tpu else False
+    eval_drop_remainderfeatures = True if FLAGS.use_tpu else False
     eval_input_fn = file_based_input_fn_builder(
         input_file=eval_file,
         seq_length=FLAGS.max_seq_length,
