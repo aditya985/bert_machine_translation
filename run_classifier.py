@@ -752,7 +752,7 @@ def input_fn_builder(features, seq_length, is_training, drop_remainder):
         "label_ids":
             tf.constant(all_label_ids, shape=[num_examples,max_seq_len], dtype=tf.int32),
         "out_masks":
-            tf.constant(all_masks, shape=[num_examples,max_seq_len], dtype=tf.int32)
+            tf.constant(all_out_masks, shape=[num_examples,max_seq_len], dtype=tf.int32)
     })
 
     if is_training:
