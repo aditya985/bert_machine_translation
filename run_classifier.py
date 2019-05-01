@@ -655,7 +655,7 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
 
         def tpu_scaffold():
           tf.train.init_from_checkpoint(init_checkpoint, assignment_map)
-          return tf.train.Scaffold()file_based_convert_examples_to_features
+          return tf.train.Scaffold()
 
         scaffold_fn = tpu_scaffold
       else:
